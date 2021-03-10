@@ -1,0 +1,156 @@
+[
+  {
+    "name": "doi",
+    "type": "STRING",
+    "description": "DOI of the work",
+    "mode": "NULLABLE"
+  },
+  {
+    "name": "title",
+    "type": "STRING",
+    "description": "Work titles, including translated titles",
+    "mode": "NULLABLE"
+  },
+  {
+    "name": "issued",
+    "type": "STRING",
+    "description": "Earliest of published-print and published-online. Order: year, month, day of month. Only year is required.",
+    "mode": "NULLABLE"
+  },
+  {
+    "name": "issued_year",
+    "type": "INTEGER",
+    "description": "Earliest of published-print and published-online (year only)",
+    "mode": "NULLABLE"
+  },
+  {
+    "name": "container_title",
+    "type": "STRING",
+    "description": "Full titles of the containing work (usually a book or journal)",
+    "mode": "NULLABLE"
+  },
+  {
+    "name": "publisher",
+    "type": "STRING",
+    "description": "Name of work's publisher",
+    "mode": "NULLABLE"
+  },
+  {
+    "name": "member",
+    "type": "STRING",
+    "description": "Member identifier of the form http://id.crossref.org/member/MEMBER_ID",
+    "mode": "NULLABLE"
+  },
+  {
+    "name": "created",
+    "type": "INTEGER",
+    "description": "Date on which the DOI was first registered (TIMESTAMP_MILLIS)",
+    "mode": "NULLABLE"
+  },
+  {
+    "name": "published_print",
+    "type": "STRING",
+    "description": "Date on which the work was published in print. Order: year, month, day of month. Only year is required.",
+    "mode": "NULLABLE"
+  },
+  {
+    "name": "published_online",
+    "type": "STRING",
+    "description": "Date on which the work was published online. Order: year, month, day of month. Only year is required.",
+    "mode": "NULLABLE"
+  },
+  {
+    "name": "issn",
+    "type": "STRING",
+    "description": "Any ISSNs assigned to the journal publishing this ressource",
+    "mode": "NULLABLE"
+  },
+  {
+    "name": "page",
+    "type": "STRING",
+    "description": "Pages numbers of an article within its journal",
+    "mode": "NULLABLE"
+  },
+  {
+    "fields": [
+      {
+        "name": "date",
+        "type": "INTEGER",
+        "description": "Date on which this license begins to take effect (TIMESTAMP_MILLIS)",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "url",
+        "type": "STRING",
+        "description": "Link to a web page describing this license",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "delay_in_days",
+        "type": "INTEGER",
+        "description": "Number of days between the publication date of the work and the start date of this license",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "content_version",
+        "type": "STRING",
+        "description": "Either vor (version of record,) am (accepted manuscript,) tdm (text and data mining) or unspecified",
+        "mode": "NULLABLE"
+      }
+    ],
+    "mode": "REPEATED",
+    "name": "license",
+    "description": "The license under which this copy is published",
+    "type": "RECORD"
+  },
+  {
+    "fields": [
+      {
+        "name": "url",
+        "type": "STRING",
+        "description": "Direct link to a full-text download location",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "content_type",
+        "type": "STRING",
+        "description": "Content type (or MIME type) of the full-text object",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "content_version",
+        "type": "STRING",
+        "description": "Either vor (version of record,) am (accepted manuscript) or unspecified",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "intended_application",
+        "type": "STRING",
+        "description": "Either text-mining, similarity-checking or unspecified",
+        "mode": "NULLABLE"
+      }
+    ],
+    "mode": "REPEATED",
+    "name": "link",
+    "description": "URLs to full-text locations",
+    "type": "RECORD"
+  },
+  {
+    "name": "reference_count",
+    "type": "INTEGER",
+    "description": "Count of outbound references deposited with Crossref",
+    "mode": "NULLABLE"
+  },
+  {
+    "name": "is_referenced_by_count",
+    "type": "INTEGER",
+    "description": "Count of inbound references deposited with Crossref",
+    "mode": "NULLABLE"
+  },
+  {
+    "name": "indexed",
+    "type": "INTEGER",
+    "description": "Date on which the work metadata was most recently indexed. Re-indexing does not imply a metadata change, see deposited for the most recent metadata change date (TIMESTAMP_MILLIS)",
+    "mode": "NULLABLE"
+  }
+]
