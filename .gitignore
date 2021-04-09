@@ -1,0 +1,6 @@
+venv/
+all.json.tar.gz
+2021_02.json.tar.gz
+crossref_snapshots/
+.idea/
+__pycache__/
