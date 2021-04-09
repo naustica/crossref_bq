@@ -92,10 +92,10 @@ class CrossrefSnapshot:
     def extract(self) -> None:
 
         # mac
-        cmd = f'tar -xvf {self.download_path}/{self.filename} -C {self.extract_path}'
+        # cmd = f'tar -xvf {self.download_path}/{self.filename} -C {self.extract_path}'
 
         # linux
-        # cmd = f'tar -xvf {self.download_path}/{self.filename} -C {self.extract_path} --use-compress-program=pigz'
+        cmd = f'tar -xvf {self.download_path}/{self.filename} -C {self.extract_path} --use-compress-program=pigz'
         p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, executable='/bin/bash')
         stdout, stderr = p.communicate()
 
