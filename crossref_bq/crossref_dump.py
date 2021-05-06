@@ -151,8 +151,6 @@ class CrossrefSnapshot:
             futures = []
             futures_msgs = {}
 
-            os.makedirs(output_release_path, exist_ok=True)
-
             for input_file in os.listdir(self.extract_path):
                 output_file_path = os.path.join(output_release_path, os.path.basename(input_file) + 'l')
                 msg = f'input_file_path={input_file}, output_file_path={output_file_path}'

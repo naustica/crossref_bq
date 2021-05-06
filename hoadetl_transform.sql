@@ -22,9 +22,8 @@ SELECT publisher,
        archive,
        license,
        funder,
-       author,
        link,
-       reference
+       relation
 FROM (
      SELECT publisher,
             title[SAFE_OFFSET(0)] as title,
@@ -56,8 +55,8 @@ FROM (
             DATE(CONCAT(CAST(published_online.date_parts[SAFE_OFFSET(0)] AS STRING), "-",
                  COALESCE(CAST(published_online.date_parts[SAFE_OFFSET(1)] AS STRING), "1"), "-",
                  COALESCE(CAST(published_online.date_parts[SAFE_OFFSET(2)] AS STRING), "1"))) AS published_online,
-            STRING_AGG(issn) AS issn,
-            STRING_AGG(archive) AS archive,
+            STRING_AGG(DISTINCT(issn)) AS issn,
+            STRING_AGG(DISTINCT(archive)) AS archive,
             ARRAY_AGG(STRUCT(EXTRACT(DATE FROM TIMESTAMP_MILLIS(lic.start.timestamp)) AS start,
                              lic.url,
                              lic.delay_in_days,
@@ -66,27 +65,18 @@ FROM (
                       fun.doi,
                       fun.award,
                       fun.doi_asserted_by)) AS funder,
-            ARRAY_AGG(STRUCT(aut.family,
-                      aut.given,
-                      aut.ORCID,
-                      aut.authenticated_orcid,
-                      aut.affiliation)) AS author,
             ARRAY_AGG(STRUCT(lin.url,
                       lin.content_type,
                       lin.content_version,
                       lin.intended_application)) AS link,
-            ARRAY_AGG(STRUCT(rec.key,
-                      rec.doi,
-                      rec.doi_asserted_by,
-                      rec.journal_title)) AS reference
-     FROM `api-project-764811344545.cr_instant.cr_feb21_complete` AS y,
-          UNNEST(issn) AS issn,
-          UNNEST(archive) AS archive,
-          UNNEST(license) AS lic,
-          UNNEST(funder) AS fun,
-          UNNEST(author) AS aut,
-          UNNEST(link) AS lin,
-          UNNEST(reference) AS rec
+            ANY_VALUE(relation) AS relation,
+            type
+     FROM `api-project-764811344545.cr_instant.cr_feb21_complete` AS y
+     LEFT JOIN UNNEST(issn) AS issn
+     LEFT JOIN UNNEST(archive) AS archive
+     LEFT JOIN UNNEST(license) AS lic
+     LEFT JOIN UNNEST(funder) AS fun
+     LEFT JOIN UNNEST(link) AS lin
      GROUP BY publisher,
               title,
               abstract,
@@ -106,6 +96,8 @@ FROM (
               page,
               article_number,
               published_print,
-              published_online
+              published_online,
+              type
+     HAVING type = "journal-article"
      )
 WHERE issued >= "2013-01-01"
