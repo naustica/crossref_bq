@@ -17,8 +17,8 @@ The following packages are required for this workflow.
 Replace the following placeholders with your credentials.
 
 ```bash
-CROSSREF_PLUS_API_TOKEN=YOUR_TOKEN
-CROSSREF_MAILTO=YOUR_EMAIL
+$ CROSSREF_PLUS_API_TOKEN=YOUR_TOKEN
+$ CROSSREF_MAILTO=YOUR_EMAIL
 ```
 
 ## Downloading Snapshot
@@ -43,7 +43,7 @@ if cr_dump.exists():
 To download the last published snapshot, this script can also be used.
 
 ```bash
-sh cr_snapshots_download.sh
+$ sh cr_snapshots_download.sh
 ```
 
 ## Data transformation
@@ -65,7 +65,7 @@ This workflow was carried out with the help of the High Performance Computing-Sy
 Starting a job on the HPC-System:
 
 ```bash
-sbatch cr_hpc.sh
+$ sbatch cr_hpc.sh
 ```
 
 Step 1 (duration: ~8h):
@@ -85,7 +85,7 @@ cr_dump.transform_release()
 Step 2 (duration: ~34h):
 
 ```bash
-cd /scratch/users/haupka/transform && ls -1 * | xargs -P 16 gzip
+$ cd /scratch/users/haupka/transform && ls -1 * | xargs -P 16 gzip
 ```
 
 ## Uploading Files to Google Bucket
@@ -93,7 +93,7 @@ cd /scratch/users/haupka/transform && ls -1 * | xargs -P 16 gzip
 Upload to Google Cloud Storage:
 
 ```bash
-gsutil -m cp -r /scratch/users/haupka/transform/ gs://oadoi_full
+$ gsutil -m cp -r /scratch/users/haupka/transform/ gs://oadoi_full
 ```
 
 ## Creating a BigQuery Table
@@ -101,7 +101,7 @@ gsutil -m cp -r /scratch/users/haupka/transform/ gs://oadoi_full
 Load into BigQuery:
 
 ```bash
-bq load
+$ bq load
   --ignore_unknown_values
   --source_format=NEWLINE_DELIMITED_JSON
   api-project-764811344545:cr_instant.cr_apr21_complete
