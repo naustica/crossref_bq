@@ -48,7 +48,7 @@ $ sh cr_snapshots_download.sh
 
 ## Data transformation
 
-After the snapshot has been downloaded, we can start processing the dump. The `script cr_hpc.sh` consists of two parts, the second part is optional. In the first step a python script is started which extracts all compressed files in the downloaded snapshot and stores them in the folder `/extract` (folder can be specified). Next, the extracted files are transformed so that they can be read by Google BigQuery. For example, hyphens are transformed into underscores. Additionally, the JSON files are transformed into Newline-delimited JSON (BigQuery does not work with regular JSON). Transformed files are stored in the folder `/transform`. Currently, a Crossref snapshot consists of approximately 40,000 compressed JSON files (about 100GB).
+After the snapshot has been downloaded, we can start processing the dump. The script `cr_hpc.sh` consists of two parts, the second part is optional. In the first step a python script is started which extracts all compressed files in the downloaded snapshot and stores them in the folder `/extract` (folder can be specified). Next, the extracted files are transformed so that they can be read by Google BigQuery. For example, hyphens are transformed into underscores. Additionally, the JSON files are transformed into Newline-delimited JSON (BigQuery does not work with regular JSON). Transformed files are stored in the folder `/transform`. Currently, a Crossref snapshot consists of approximately 40,000 compressed JSON files (about 100GB).
 
 The `CrossrefSnapshot` class takes the following parameters:
 
@@ -60,7 +60,7 @@ The `CrossrefSnapshot` class takes the following parameters:
 
 The second and optional step involves recompressing the transformed files. This reduces about 2/3 of the space taken.
 
-This workflow was carried out with the help of the High Performance Computing-System of the [GWDG Göttingen](https://www.gwdg.de/web/guest). The HPC provides high-performance computers for employees of the university of Göttingen, which can be used for intensive computer tasks. To speed up data processing, the Python script uses parallelization. In this case, 16 CPU cores were obtained.
+This workflow was carried out with the help of the High Performance Computing-System of the [GWDG Göttingen](https://www.gwdg.de/web/guest). The HPC provides high-performance computers for employees of the University of Göttingen, which can be used for intensive computer tasks. To speed up data processing, the Python script uses parallelization. In this case, 16 CPU cores were obtained.
 
 Starting a job on the HPC-System:
 
