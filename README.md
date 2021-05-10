@@ -73,7 +73,10 @@ Step 1 (duration: ~8h):
 ```python
 from crossref_bq.crossref_dump import CrossrefSnapshot
 
-cr_dump = CrossrefSnapshot(year=2021, month=4, filename='all.json.tar.gz', download_path='/scratch/users/haupka')
+cr_dump = CrossrefSnapshot(year=2021,
+                           month=4,
+                           filename='all.json.tar.gz',
+                           download_path='/scratch/users/haupka')
 
 cr_dump.extract()
 cr_dump.transform_release()
@@ -98,7 +101,11 @@ gsutil -m cp -r /scratch/users/haupka/transform/ gs://oadoi_full
 Load into BigQuery:
 
 ```bash
-bq load --ignore_unknown_values --source_format=NEWLINE_DELIMITED_JSON api-project-764811344545:cr_instant.cr_apr21_complete gs://oadoi_full/transform/*.gz cr_bq_schema.json
+bq load
+  --ignore_unknown_values
+  --source_format=NEWLINE_DELIMITED_JSON
+  api-project-764811344545:cr_instant.cr_apr21_complete
+  gs://oadoi_full/transform/*.gz cr_bq_schema.json
 ```
 
 Applying date transformation on the existing table:
