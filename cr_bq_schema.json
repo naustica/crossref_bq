@@ -2124,7 +2124,7 @@
         "description": ""
       }
     ],
-    "mode": "NULLABLE",
+    "mode": "REPEATED",
     "name": "review",
     "type": "RECORD",
     "description": "Peer review metadata"
