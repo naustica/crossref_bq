@@ -2078,5 +2078,55 @@
     "name": "standards_body",
     "type": "RECORD",
     "description": ""
+  },
+  {
+    "fields": [
+      {
+        "mode": "NULLABLE",
+        "name": "running_number",
+        "type": "STRING",
+        "description": ""
+      },
+      {
+        "mode": "NULLABLE",
+        "name": "revision_round",
+        "type": "STRING",
+        "description": ""
+      },
+      {
+        "mode": "NULLABLE",
+        "name": "stage",
+        "type": "STRING",
+        "description": "One of pre-publication or post-publication"
+      },
+      {
+        "mode": "NULLABLE",
+        "name": "recommendation",
+        "type": "STRING",
+        "description": "One of major-revision or minor-revision or reject or reject-with-resubmit or accept"
+      },
+      {
+        "mode": "NULLABLE",
+        "name": "type",
+        "type": "STRING",
+        "description": "One of referee-report or editor-report or author-comment or community-comment or aggregate"
+      },
+      {
+        "mode": "NULLABLE",
+        "name": "competing_interest_statement",
+        "type": "STRING",
+        "description": ""
+      },
+      {
+        "mode": "NULLABLE",
+        "name": "language",
+        "type": "STRING",
+        "description": ""
+      }
+    ],
+    "mode": "NULLABLE",
+    "name": "review",
+    "type": "RECORD",
+    "description": "Peer review metadata"
   }
 ]
