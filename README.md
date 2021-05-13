@@ -1,6 +1,6 @@
 # Workflow for Processing and Loading Crossref snapshots into Google BigQuery
 
-In the context of scholarly communication analysis, crossref snapshots are regularly processed at the SUB Göttingen. This repository contains instructions on how to extract and transform crossref data for data analysis with Google BigQuery. Our workflow adapts the approach of [the academic observatory](https://github.com/The-Academic-Observatory/observatory-platform).
+This repository contains instructions on how to extract and transform crossref data for data analysis with Google BigQuery. This workflow adapts the approach of [the academic observatory](https://github.com/The-Academic-Observatory/observatory-platform).
 
 ## Requirements
 
@@ -54,6 +54,7 @@ The `CrossrefSnapshot` class takes the following parameters:
 
 - `year` (publication year of the snapshot)
 - `month` (publication month of the snapshot)
+- `filename` (filename of the snapshot)
 - `download_path` (file path to download the snapshot)
 - `extract_path` (file path to extract the snapshot)
 - `transform_path` (file path to transform the snapshot)
@@ -68,7 +69,7 @@ Starting a job on the HPC-System:
 $ sbatch cr_hpc.sh
 ```
 
-Step 1 (duration: ~8h):
+Step 1 (duration: ~1h):
 
 ```python
 from crossref_bq.crossref_dump import CrossrefSnapshot
@@ -82,7 +83,7 @@ cr_dump.extract()
 cr_dump.transform_release()
 ```
 
-Step 2 (duration: ~34h):
+Step 2 (duration: ~2h):
 
 ```bash
 $ cd /scratch/users/haupka/transform && ls -1 * | xargs -P 16 gzip
