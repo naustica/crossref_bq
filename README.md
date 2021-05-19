@@ -1,6 +1,6 @@
 # Workflow for Processing and Loading Crossref snapshots into Google BigQuery
 
-This repository contains instructions on how to extract and transform crossref data for data analysis with Google BigQuery. This workflow adapts the approach of [the academic observatory](https://github.com/The-Academic-Observatory/observatory-platform).
+This repository contains instructions on how to extract and transform Crossref data for data analysis with Google BigQuery. This workflow adapts the approach of [the academic observatory](https://github.com/The-Academic-Observatory/observatory-platform).
 
 ## Requirements
 
@@ -23,7 +23,7 @@ $ CROSSREF_MAILTO=YOUR_EMAIL
 
 ## Downloading Snapshot
 
-We can use the official Crossref REST-API to download snapshots to our computer.
+We can use the official Crossref REST-API to download snapshots.
 
 ```bash
 $ wget --header "Crossref-Plus-API-Token: Bearer ${CROSSREF_PLUS_API_TOKEN}" \
@@ -126,8 +126,28 @@ FROM (
 WHERE issued >= "2013-01-01"
 ```
 
-## Issues encountered
+## Example Query
 
+```sql
+SELECT member, publisher, COUNT(DISTINCT(doi)) as n
+FROM `api-project-764811344545.cr_instant.cr_apr21_complete`
+GROUP BY member, publisher
+ORDER BY n DESC
+LIMIT 10
+```
+
+|member | publisher | n      |
+|-------|-----------|--------|
+|78  |Elsevier BV |17540147 |
+|311 |Wiley |8900657 |
+|297 |Springer Science and Business Media LLC |8435224 |
+|301 |Informa UK Limited| 4467000 |
+|263 |IEEE |3453758 |
+|340 |Public Library of Science (PLoS)| 3276309 |
+|286 |Oxford University Press (OUP) |3069256 |
+|179 |SAGE Publications |2539602|
+|276 |Ovid Technologies (Wolters Kluwer Health)| 2276974 |
+|316 |American Chemical Society (ACS)| 2096678 |
 
 ## To Do
 - Tests
