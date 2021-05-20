@@ -55,13 +55,13 @@ The `CrossrefSnapshot` class takes the following parameters:
 - `year` (publication year of the snapshot)
 - `month` (publication month of the snapshot)
 - `filename` (filename of the snapshot)
-- `download_path` (file path to download the snapshot)
-- `extract_path` (file path to extract the snapshot)
-- `transform_path` (file path to transform the snapshot)
+- `download_path` (file path to download the snapshot to)
+- `extract_path` (file path to extract the snapshot to)
+- `transform_path` (file path to transform the snapshot to)
 
 The second and optional step involves recompressing the transformed files. This reduces about 2/3 of the space taken.
 
-This workflow was carried out with the help of the High Performance Computing-System of the [GWDG Göttingen](https://www.gwdg.de/web/guest). The HPC provides high-performance computers for employees of the University of Göttingen, which can be used for intensive computer tasks. To speed up data processing, the Python script uses parallelization. In this case, 16 CPU cores were obtained.
+This workflow has been tested using the High Performance Computing-System of the [GWDG Göttingen](https://www.gwdg.de/web/guest). The HPC provides high-performance computers for employees of the University of Göttingen, which can be used for intensive computing tasks. To speed up data processing, the Python script uses parallelization. In this case, 16 CPU cores were obtained.
 
 Starting a job on the HPC-System:
 
