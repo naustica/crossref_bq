@@ -20,9 +20,15 @@ SELECT publisher,
        published_online,
        issn,
        archive,
-       license,
-       funder,
-       link,
+       (SELECT ARRAY_AGG(STRUCT(start, url, delay_in_days, content_version))
+       FROM (SELECT DISTINCT start, url, delay_in_days, content_version FROM UNNEST(license)
+       )) AS license,
+       (SELECT ARRAY_AGG(STRUCT(name, doi, doi_asserted_by))
+       FROM (SELECT DISTINCT name, doi, doi_asserted_by FROM UNNEST(funder)
+       )) AS funder,
+       (SELECT ARRAY_AGG(STRUCT(url, content_type, content_version, intended_application))
+       FROM (SELECT DISTINCT url, content_type, content_version, intended_application FROM UNNEST(link)
+       )) AS link,
        relation
 FROM (
      SELECT publisher,
