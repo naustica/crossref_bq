@@ -49,16 +49,38 @@ FROM (
             published_online,
             issn,
             archive,
-            (SELECT ARRAY_AGG(STRUCT(start, url, delay_in_days, content_version))
-            FROM (SELECT DISTINCT start, url, delay_in_days, content_version FROM UNNEST(license)
-            )) AS license,
-            (SELECT ARRAY_AGG(STRUCT(name, doi, doi_asserted_by))
-            FROM (SELECT DISTINCT name, doi, doi_asserted_by FROM UNNEST(funder)
-            )) AS funder,
-            (SELECT ARRAY_AGG(STRUCT(url, content_type, content_version, intended_application))
-            FROM (SELECT DISTINCT url, content_type, content_version, intended_application FROM UNNEST(link)
-            )) AS link,
-            relation,
-            author,
-            reference
-     FROM `api-project-764811344545.cr_instant.cr_apr21_derived_2013_jn` AS y)
+            ANY_VALUE((SELECT ARRAY_AGG(STRUCT(start, url, delay_in_days, content_version))
+                FROM (SELECT DISTINCT start, url, delay_in_days, content_version FROM UNNEST(license)
+            ))) AS license,
+            ANY_VALUE((SELECT ARRAY_AGG(STRUCT(name, doi, award, doi_asserted_by))
+                 FROM (SELECT DISTINCT name, doi, (SELECT STRING_AGG(a, ",") FROM UNNEST(award) AS a) AS award, doi_asserted_by FROM UNNEST(funder)
+            ))) AS funder,
+            ANY_VALUE((SELECT ARRAY_AGG(STRUCT(url, content_type, content_version, intended_application))
+                FROM (SELECT DISTINCT url, content_type, content_version, intended_application FROM UNNEST(link)
+            ))) AS link,
+            ANY_VALUE(relation) AS relation,
+            ANY_VALUE(author) AS author,
+            ANY_VALUE(reference) AS reference
+     FROM `api-project-764811344545.cr_instant.snapshot` AS y
+     GROUP BY publisher,
+              title,
+              abstract,
+              reference_count,
+              is_referenced_by_count,
+              y.doi,
+              member,
+              created,
+              deposited,
+              indexed,
+              issued,
+              posted,
+              accepted,
+              container_title,
+              issue,
+              volume,
+              page,
+              article_number,
+              published_print,
+              published_online,
+              issn,
+              archive)

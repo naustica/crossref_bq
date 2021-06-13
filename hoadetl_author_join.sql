@@ -1,5 +1,5 @@
 SELECT cr_derived.*, cr_author.author
-FROM `api-project-764811344545.cr_instant.cr_feb21_derived_2013_jn` AS cr_derived
+FROM `api-project-764811344545.cr_instant.snapshot` AS cr_derived
 LEFT OUTER JOIN (SELECT doi, author
                  FROM (
                     SELECT doi,
@@ -8,7 +8,7 @@ LEFT OUTER JOIN (SELECT doi, author
                               aut.ORCID,
                               aut.authenticated_orcid,
                               aut.affiliation)) AS author
-                    FROM `api-project-764811344545.cr_instant.cr_feb21_complete`
+                    FROM `api-project-764811344545.cr_instant.snapshot_complete`
                     LEFT JOIN UNNEST(author) AS aut
                     GROUP BY doi
                   )) AS cr_author

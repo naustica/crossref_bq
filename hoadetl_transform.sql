@@ -20,16 +20,16 @@ SELECT publisher,
        published_online,
        issn,
        archive,
-       (SELECT ARRAY_AGG(STRUCT(start, url, delay_in_days, content_version))
-       FROM (SELECT DISTINCT start, url, delay_in_days, content_version FROM UNNEST(license)
-       )) AS license,
-       (SELECT ARRAY_AGG(STRUCT(name, doi, doi_asserted_by))
-       FROM (SELECT DISTINCT name, doi, doi_asserted_by FROM UNNEST(funder)
-       )) AS funder,
-       (SELECT ARRAY_AGG(STRUCT(url, content_type, content_version, intended_application))
-       FROM (SELECT DISTINCT url, content_type, content_version, intended_application FROM UNNEST(link)
-       )) AS link,
-       relation
+       ANY_VALUE((SELECT ARRAY_AGG(STRUCT(start, url, delay_in_days, content_version))
+           FROM (SELECT DISTINCT start, url, delay_in_days, content_version FROM UNNEST(license)
+       ))) AS license,
+       ANY_VALUE((SELECT ARRAY_AGG(STRUCT(name, doi, award, doi_asserted_by))
+            FROM (SELECT DISTINCT name, doi, (SELECT STRING_AGG(a, ",") FROM UNNEST(award) AS a) AS award, doi_asserted_by FROM UNNEST(funder)
+       ))) AS funder,
+       ANY_VALUE((SELECT ARRAY_AGG(STRUCT(url, content_type, content_version, intended_application))
+           FROM (SELECT DISTINCT url, content_type, content_version, intended_application FROM UNNEST(link)
+       ))) AS link,
+       ANY_VALUE(relation) AS relation
 FROM (
      SELECT publisher,
             title[SAFE_OFFSET(0)] as title,
@@ -77,7 +77,7 @@ FROM (
                       lin.intended_application)) AS link,
             ANY_VALUE(relation) AS relation,
             type
-     FROM `api-project-764811344545.cr_instant.cr_feb21_complete` AS y
+     FROM `api-project-764811344545.cr_instant.snapshot_complete` AS y
      LEFT JOIN UNNEST(issn) AS issn
      LEFT JOIN UNNEST(archive) AS archive
      LEFT JOIN UNNEST(license) AS lic
@@ -106,4 +106,26 @@ FROM (
               type
      HAVING type = "journal-article"
      )
-WHERE issued >= "2013-01-01"
+GROUP BY publisher,
+       title,
+       abstract,
+       reference_count,
+       is_referenced_by_count,
+       doi,
+       member,
+       created,
+       deposited,
+       indexed,
+       issued,
+       posted,
+       accepted,
+       container_title,
+       issue,
+       volume,
+       page,
+       article_number,
+       published_print,
+       published_online,
+       issn,
+       archive
+HAVING issued >= "2013-01-01"

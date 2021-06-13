@@ -105,7 +105,7 @@ Load into BigQuery:
 $ bq load
   --ignore_unknown_values
   --source_format=NEWLINE_DELIMITED_JSON
-  api-project-764811344545:cr_instant.cr_apr21_complete
+  api-project-764811344545:cr_instant.snapshot_complete
   gs://oadoi_full/transform/*.gz cr_bq_schema.json
 ```
 
@@ -120,7 +120,7 @@ FROM (
                  COALESCE(CAST(issued.date_parts[SAFE_OFFSET(1)] AS STRING), "1"), "-",
                  COALESCE(CAST(issued.date_parts[SAFE_OFFSET(2)] AS STRING), "1"))) AS issued,
             type
-     FROM `api-project-764811344545.cr_instant.cr_apr21_complete`
+     FROM `api-project-764811344545.cr_instant.snapshot`
      WHERE type = "journal-article"
      )
 WHERE issued >= "2013-01-01"
@@ -130,7 +130,7 @@ WHERE issued >= "2013-01-01"
 
 ```sql
 SELECT member, publisher, COUNT(DISTINCT(doi)) as n
-FROM `api-project-764811344545.cr_instant.cr_apr21_complete`
+FROM `api-project-764811344545.cr_instant.snapshot`
 GROUP BY member, publisher
 ORDER BY n DESC
 LIMIT 10
