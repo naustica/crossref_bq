@@ -20,12 +20,12 @@
 import logging
 import requests
 import os
-import json
+import ujson
 import jsonlines
 import shutil
 import functools
 import subprocess
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from multiprocessing import cpu_count
 
 
@@ -120,22 +120,15 @@ class CrossrefSnapshot:
     @staticmethod
     def transform_file(input_file_path: str, output_file_path: str) -> bool:
 
-        try:
+        with open(input_file_path, mode='r') as input_file:
+            input_data = ujson.load(input_file)
 
-            with open(input_file_path, mode='r') as input_file:
-                input_data = json.load(input_file)
+        output_data = []
+        for item in input_data['items']:
+            output_data.append(CrossrefSnapshot.transform_item(item))
 
-            output_data = []
-            for item in input_data['items']:
-                output_data.append(CrossrefSnapshot.transform_item(item))
-
-            with jsonlines.open(output_file_path, mode='w', compact=True) as output_file:
-                output_file.write_all(output_data)
-
-            return True
-
-        except:
-            return False
+        with jsonlines.open(output_file_path, mode='w', compact=True) as output_file:
+            output_file.write_all(output_data)
 
     @staticmethod
     def transform_item(item):
@@ -160,29 +153,20 @@ class CrossrefSnapshot:
     def transform_release(self, max_workers: int = cpu_count()) -> bool:
 
         output_release_path = self.transform_path
+        finished = 0
 
-        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        with ProcessPoolExecutor(max_workers=max_workers) as executor:
             futures = []
-            futures_msgs = {}
 
             for input_file in os.listdir(self.extract_path):
                 output_file_path = os.path.join(output_release_path, os.path.basename(input_file) + 'l')
-                msg = f'input_file_path={input_file}, output_file_path={output_file_path}'
-                logging.info(f'transform_release: {msg}')
                 future = executor.submit(CrossrefSnapshot.transform_file,
                                          input_file_path=self.extract_path + '/' + input_file,
                                          output_file_path=output_file_path)
                 futures.append(future)
-                futures_msgs[future] = msg
 
-            results = []
             for future in as_completed(futures):
-                success = future.result()
-                msg = futures_msgs[future]
-                results.append(success)
-                if success:
-                    logging.info(f'transform_release success: {msg}')
-                else:
-                    logging.error(f'transform_release failed: {msg}')
-
-        return all(results)
+                future.result()
+                finished += 1
+                if finished % 1000 == 0:
+                    logging.info(f"Transformed {finished} files")
