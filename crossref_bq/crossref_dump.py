@@ -20,6 +20,8 @@
 import logging
 import requests
 import os
+import json
+import jsonlines
 import shutil
 import functools
 import subprocess
@@ -118,30 +120,42 @@ class CrossrefSnapshot:
     @staticmethod
     def transform_file(input_file_path: str, output_file_path: str) -> bool:
 
-        cmd = 'mawk \'BEGIN {FS="\\":";RS=",\\"";OFS=FS;ORS=RS} {for (i=1; i<=NF;i++) if(i != NF) gsub("-", "_", $i)}1\'' \
-              f' {input_file_path} | ' \
-              'mawk \'!/^\}$|^\]$|,\\"$/{gsub("\[\[", "[");gsub("]]", "]");gsub(/,[ \\t]*$/,"");' \
-              'gsub("\\"timestamp\\":_", "\\"timestamp\\":");gsub("\\"date_parts\\":\[null]", "\\"date_parts\\":[]");' \
-              'gsub(/^\{\\"items\\":\[/,"");print}\' > ' \
-              f'{output_file_path}'
+        try:
 
-        p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, executable='/bin/bash')
+            with open(input_file_path, mode='r') as input_file:
+                input_data = json.load(input_file)
 
-        stdout, stderr = p.communicate()
+            output_data = []
+            for item in input_data['items']:
+                output_data.append(CrossrefSnapshot.transform_item(item))
 
-        stdout = stdout.decode('utf-8')
-        stderr = stderr.decode('utf-8')
+            with jsonlines.open(output_file_path, mode='w', compact=True) as output_file:
+                output_file.write_all(output_data)
 
-        logging.debug(stdout)
-        success = p.returncode == 0
+            return True
 
-        if success:
-            logging.info(f'Transform file success: {input_file_path}')
+        except:
+            return False
+
+    @staticmethod
+    def transform_item(item):
+
+        if isinstance(item, dict):
+            new = {}
+            for k, v in item.items():
+                k = k.replace('-', '_')
+
+                if k == 'date_parts':
+                    v = v[0]
+                    if None in v:
+                        v = []
+
+                new[k] = CrossrefSnapshot.transform_item(v)
+            return new
+        elif isinstance(item, list):
+            return [CrossrefSnapshot.transform_item(i) for i in item]
         else:
-            logging.error(f'Transform file error: {input_file_path}')
-            logging.error(stderr)
-
-        return success
+            return item
 
     def transform_release(self, max_workers: int = cpu_count()) -> bool:
 
