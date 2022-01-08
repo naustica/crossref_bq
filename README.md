@@ -9,8 +9,8 @@ The following packages are required for this workflow.
 - [Python3](https://www.python.org)
   - [requests](https://docs.python-requests.org/en/master/)
   - [gsutil](https://pypi.org/project/gsutil/)
-- [mawk](https://invisible-island.net/mawk/)
-- [pigz](https://linux.die.net/man/1/pigz)
+  - [ujson](https://pypi.org/project/ujson/)
+  - [json-lines](https://pypi.org/project/json-lines/)
 
 ## Setting Crossref Variables
 

@@ -14,7 +14,7 @@
 
 # Author: Aniek Roelofs, James Diprose
 
-# Modifications copyright (C) 2021 Nick Haupka
+# Modifications copyright (C) 2022 Nick Haupka
 
 
 import logging
@@ -25,6 +25,7 @@ import jsonlines
 import shutil
 import functools
 import subprocess
+from datetime import datetime
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from multiprocessing import cpu_count
 
@@ -87,11 +88,10 @@ class CrossrefSnapshot:
                     raise ConnectionError(f'Error downloading snapshot (status code={r.status_code})')
 
                 with open(self.download_path + '/' + self.filename, 'wb') as file:
-                    r.raw.read = functools.partial(r.raw.read,
-                                                   decode_content=True)
+                    r.raw.read = functools.partial(r.raw.read, decode_content=True)
                     shutil.copyfileobj(r.raw, file)
 
-    def extract(self) -> None:
+    def extract(self):
 
         # mac
         # cmd = f'tar -xvf {self.download_path}/{self.filename} -C {self.extract_path}'
@@ -118,7 +118,7 @@ class CrossrefSnapshot:
         return success
 
     @staticmethod
-    def transform_file(input_file_path: str, output_file_path: str) -> bool:
+    def transform_file(input_file_path: str, output_file_path: str):
 
         with open(input_file_path, mode='r') as input_file:
             input_data = ujson.load(input_file)
@@ -136,12 +136,47 @@ class CrossrefSnapshot:
         if isinstance(item, dict):
             new = {}
             for k, v in item.items():
+
+                if k == 'type':
+                    if v != 'journal-article':
+                        continue
+
                 k = k.replace('-', '_')
 
+                if k == 'title':
+                    if isinstance(v, list) and len(v) >= 1:
+                        v = v[0]
+
+                if k == 'container_title':
+                    if isinstance(v, list) and len(v) >= 1:
+                        v = v[0]
+
+                if k == 'issn':
+                    v = ','.join(list(set(v)))
+
+                if k == 'archive':
+                    v = ','.join(list(set(v)))
+
                 if k == 'date_parts':
+
                     v = v[0]
+
                     if None in v:
                         v = []
+
+                    len_arr_date_parts = len(v)
+
+                    if len_arr_date_parts == 1:
+                        v = '-'.join([str(v[0]), '1', '1'])
+                        v = str(datetime.strptime(v, '%Y-%m-%d').strftime("%Y-%m-%d"))
+
+                    elif len_arr_date_parts == 2:
+                        v = '-'.join([str(v[0]), str(v[1]), '1'])
+                        v = str(datetime.strptime(v, '%Y-%m-%d').strftime("%Y-%m-%d"))
+
+                    elif len_arr_date_parts == 3:
+                        v = '-'.join([str(v[0]), str(v[1]), str(v[2])])
+                        v = str(datetime.strptime(v, '%Y-%m-%d').strftime("%Y-%m-%d"))
 
                 new[k] = CrossrefSnapshot.transform_item(v)
             return new
@@ -150,16 +185,15 @@ class CrossrefSnapshot:
         else:
             return item
 
-    def transform_release(self, max_workers: int = cpu_count()) -> bool:
+    def transform_release(self, max_workers: int = cpu_count()):
 
-        output_release_path = self.transform_path
         finished = 0
 
         with ProcessPoolExecutor(max_workers=max_workers) as executor:
             futures = []
 
             for input_file in os.listdir(self.extract_path):
-                output_file_path = os.path.join(output_release_path, os.path.basename(input_file) + 'l')
+                output_file_path = os.path.join(self.transform_path, os.path.basename(input_file) + 'l')
                 future = executor.submit(CrossrefSnapshot.transform_file,
                                          input_file_path=self.extract_path + '/' + input_file,
                                          output_file_path=output_file_path)
