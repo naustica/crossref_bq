@@ -206,9 +206,6 @@ class CrossrefSnapshot:
 
                     v = v.strftime('%Y-%m-%d')
 
-                if k == 'date-parts':
-                    continue
-
                 k = k.replace('-', '_')
 
                 new[k] = CrossrefSnapshot.transform_item(v)
