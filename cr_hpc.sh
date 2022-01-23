@@ -8,6 +8,8 @@
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=nick.haupka@sub.uni-goettingen.de
 
+module load python
+
 python3 start.py
 
 cd /scratch/users/haupka/transform && ls -1 * | xargs -P 16 gzip

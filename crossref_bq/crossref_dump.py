@@ -141,42 +141,75 @@ class CrossrefSnapshot:
                     if v != 'journal-article':
                         continue
 
-                k = k.replace('-', '_')
+                if k == 'DOI':
+                    k = 'doi'
 
                 if k == 'title':
                     if isinstance(v, list) and len(v) >= 1:
                         v = v[0]
 
-                if k == 'container_title':
+                if k == 'container-title':
                     if isinstance(v, list) and len(v) >= 1:
                         v = v[0]
 
-                if k == 'issn':
+                if k == 'ISSN':
+                    k = 'issn'
                     v = ','.join(list(set(v)))
 
                 if k == 'archive':
                     v = ','.join(list(set(v)))
 
-                if k == 'date_parts':
+                if k in ['created',
+                         'deposited',
+                         'indexed',
+                         'issued',
+                         'posted',
+                         'accepted',
+                         'published-print',
+                         'published-online',
+                         'start']:
+
+                    v = item[k].get('date-parts')
+
+                    if not v:
+                        continue
 
                     v = v[0]
 
                     if None in v:
-                        v = []
+                        continue
 
                     len_arr_date_parts = len(v)
 
+                    if len_arr_date_parts > 0:
+                        if not len(str(v[0])) == 4:
+                            continue
+
                     if len_arr_date_parts == 1:
                         v = '-'.join([str(v[0]), '1', '1'])
-                        v = str(datetime.strptime(v, '%Y-%m-%d').strftime("%Y-%m-%d"))
+                        v = datetime.strptime(v, '%Y-%m-%d')
 
                     elif len_arr_date_parts == 2:
                         v = '-'.join([str(v[0]), str(v[1]), '1'])
-                        v = str(datetime.strptime(v, '%Y-%m-%d').strftime("%Y-%m-%d"))
+                        v = datetime.strptime(v, '%Y-%m-%d')
 
                     elif len_arr_date_parts == 3:
                         v = '-'.join([str(v[0]), str(v[1]), str(v[2])])
-                        v = str(datetime.strptime(v, '%Y-%m-%d').strftime("%Y-%m-%d"))
+                        v = datetime.strptime(v, '%Y-%m-%d')
+
+                    if k == 'issued':
+
+                        filter_date = datetime(2013, 1, 1)
+
+                        if not v >= filter_date:
+                            continue
+
+                    v = v.strftime('%Y-%m-%d')
+
+                if k == 'date-parts':
+                    continue
+
+                k = k.replace('-', '_')
 
                 new[k] = CrossrefSnapshot.transform_item(v)
             return new
