@@ -125,7 +125,30 @@ class CrossrefSnapshot:
 
         output_data = []
         for item in input_data['items']:
-            output_data.append(CrossrefSnapshot.transform_item(item))
+
+            transformed_item = CrossrefSnapshot.transform_item(item)
+
+            if 'type' not in transformed_item.keys():
+                continue
+
+            if 'issued' not in transformed_item.keys():
+                continue
+
+            filter_status = True
+
+            for k, v in transformed_item.items():
+                if k == 'type' and v != 'journal-article':
+                    filter_status = False
+                if k == 'issued':
+                    filter_date = datetime(2013, 1, 1)
+                    if v is None:
+                        filter_status = False
+                    if v is not None:
+                        if not datetime.strptime(v, '%Y-%m-%d') >= filter_date:
+                            filter_status = False
+
+            if filter_status:
+                output_data.append(transformed_item)
 
         with jsonlines.open(output_file_path, mode='w', compact=True) as output_file:
             output_file.write_all(output_data)
@@ -136,10 +159,6 @@ class CrossrefSnapshot:
         if isinstance(item, dict):
             new = {}
             for k, v in item.items():
-
-                if k == 'type':
-                    if v != 'journal-article':
-                        continue
 
                 if k == 'DOI':
                     k = 'doi'
@@ -172,22 +191,22 @@ class CrossrefSnapshot:
                     v = item[k].get('date-parts')
 
                     if not v:
-                        continue
+                        v = [[]]
 
                     v = v[0]
-
-                    if None in v:
-                        continue
 
                     len_arr_date_parts = len(v)
 
                     if len_arr_date_parts > 0:
                         if not len(str(v[0])) == 4:
-                            continue
+                            v = None
 
                     if len_arr_date_parts == 1:
-                        v = '-'.join([str(v[0]), '1', '1'])
-                        v = datetime.strptime(v, '%Y-%m-%d')
+                        if v[0] is None:
+                            v = None
+                        else:
+                            v = '-'.join([str(v[0]), '1', '1'])
+                            v = datetime.strptime(v, '%Y-%m-%d')
 
                     elif len_arr_date_parts == 2:
                         v = '-'.join([str(v[0]), str(v[1]), '1'])
@@ -197,14 +216,9 @@ class CrossrefSnapshot:
                         v = '-'.join([str(v[0]), str(v[1]), str(v[2])])
                         v = datetime.strptime(v, '%Y-%m-%d')
 
-                    if k == 'issued':
+                    if v:
 
-                        filter_date = datetime(2013, 1, 1)
-
-                        if not v >= filter_date:
-                            continue
-
-                    v = v.strftime('%Y-%m-%d')
+                        v = v.strftime('%Y-%m-%d')
 
                 k = k.replace('-', '_')
 
