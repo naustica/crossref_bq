@@ -128,27 +128,10 @@ class CrossrefSnapshot:
 
             transformed_item = CrossrefSnapshot.transform_item(item)
 
-            if 'type' not in transformed_item.keys():
-                continue
+            filter_item = CrossrefSnapshot.filter_item(transformed_item)
 
-            if 'issued' not in transformed_item.keys():
-                continue
-
-            filter_status = True
-
-            for k, v in transformed_item.items():
-                if k == 'type' and v != 'journal-article':
-                    filter_status = False
-                if k == 'issued':
-                    filter_date = datetime(2013, 1, 1)
-                    if v is None:
-                        filter_status = False
-                    if v is not None:
-                        if not datetime.strptime(v, '%Y-%m-%d') >= filter_date:
-                            filter_status = False
-
-            if filter_status:
-                output_data.append(transformed_item)
+            if filter_item:
+                output_data.append(filter_item)
 
         with jsonlines.open(output_file_path, mode='w', compact=True) as output_file:
             output_file.write_all(output_data)
@@ -195,26 +178,32 @@ class CrossrefSnapshot:
 
                     v = v[0]
 
-                    len_arr_date_parts = len(v)
+                    try:
 
-                    if len_arr_date_parts > 0:
-                        if not len(str(v[0])) == 4:
-                            v = None
+                        len_arr_date_parts = len(v)
 
-                    if len_arr_date_parts == 1:
-                        if v[0] is None:
-                            v = None
-                        else:
-                            v = '-'.join([str(v[0]), '1', '1'])
+                        if len_arr_date_parts > 0:
+                            if not len(str(v[0])) == 4:
+                                v = None
+
+                        if len_arr_date_parts == 1:
+                            if v[0] is None:
+                                v = None
+                            else:
+                                v = '-'.join([str(v[0]), '1', '1'])
+                                v = datetime.strptime(v, '%Y-%m-%d')
+
+                        elif len_arr_date_parts == 2:
+                            v = '-'.join([str(v[0]), str(v[1]), '1'])
                             v = datetime.strptime(v, '%Y-%m-%d')
 
-                    elif len_arr_date_parts == 2:
-                        v = '-'.join([str(v[0]), str(v[1]), '1'])
-                        v = datetime.strptime(v, '%Y-%m-%d')
+                        elif len_arr_date_parts == 3:
+                            v = '-'.join([str(v[0]), str(v[1]), str(v[2])])
+                            v = datetime.strptime(v, '%Y-%m-%d')
 
-                    elif len_arr_date_parts == 3:
-                        v = '-'.join([str(v[0]), str(v[1]), str(v[2])])
-                        v = datetime.strptime(v, '%Y-%m-%d')
+                    except:
+
+                        v = None
 
                     if v:
 
@@ -228,6 +217,33 @@ class CrossrefSnapshot:
             return [CrossrefSnapshot.transform_item(i) for i in item]
         else:
             return item
+
+    @staticmethod
+    def filter_item(item):
+
+        if 'type' not in item.keys():
+            return None
+
+        if 'issued' not in item.keys():
+            return None
+
+        filter_status = True
+
+        for k, v in item.items():
+            if k == 'type' and v != 'journal-article':
+                filter_status = False
+            if k == 'issued':
+                filter_date = datetime(2013, 1, 1)
+                if v is None:
+                    filter_status = False
+                if v is not None:
+                    if not datetime.strptime(v, '%Y-%m-%d') >= filter_date:
+                        filter_status = False
+
+        if filter_status:
+            return item
+        else:
+            return None
 
     def transform_release(self, max_workers: int = cpu_count()):
 
