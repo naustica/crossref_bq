@@ -41,7 +41,7 @@ $ sbatch cr_hpc.sh
 Upload to Google Cloud Storage:
 
 ```bash
-$ gsutil -m cp -r /scratch/users/haupka/transform/ gs://oadoi_full
+$ gsutil -m cp -r /scratch/users/haupka/transform/ gs://bigschol
 ```
 
 ## Creating a BigQuery Table
@@ -53,7 +53,7 @@ $ bq load
   --ignore_unknown_values
   --source_format=NEWLINE_DELIMITED_JSON
   subugoe-collaborative:cr_instant.snapshot
-  gs://oadoi_full/transform/*.gz schema_crossref.json
+  gs://bigschol/transform/*.gz schema_crossref.json
 ```
 
 ## Example Query
