@@ -269,7 +269,7 @@
       },
       {
         "mode": "NULLABLE",
-        "name": "URL",
+        "name": "url",
         "type": "STRING",
         "description": "Direct link to a full-text download location."
       }
