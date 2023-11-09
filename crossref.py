@@ -14,7 +14,7 @@
 
 # Author: Aniek Roelofs, James Diprose
 
-# Modifications copyright (C) 2022 Nick Haupka
+# Modifications copyright (C) 2023 Nick Haupka
 
 
 import logging
@@ -94,6 +94,12 @@ def transform_item(item):
 
             if k == 'URL':
                 k = 'url'
+                
+            if k == 'ISBN':
+                k = 'isbn'
+            
+            if k == 'ORCID':
+                k = 'orcid'
 
             if k == 'title':
                 if isinstance(v, list) and len(v) >= 1:
@@ -110,14 +116,25 @@ def transform_item(item):
             if k == 'archive':
                 v = ','.join(list(set(v)))
 
-            if k in ['created',
+            if k in ['approved',
+                     'created',
+                     'content-created',
+                     'content-updated',
                      'deposited',
                      'indexed',
                      'issued',
                      'posted',
                      'accepted',
+                     'published',
                      'published-print',
                      'published-online',
+                     'role-start',
+                     'role-end',
+                     'updated',
+                     'award-start',
+                     'award-planned-end',
+                     'award-end',
+                     'end',
                      'start']:
 
                 v = item[k].get('date-parts')
@@ -197,8 +214,6 @@ def filter_item(item):
 
 def transform_release(max_workers: int = cpu_count()):
 
-    finished = 0
-
     with ProcessPoolExecutor(max_workers=max_workers) as executor:
         futures = []
 
@@ -211,9 +226,6 @@ def transform_release(max_workers: int = cpu_count()):
 
         for future in as_completed(futures):
             future.result()
-            finished += 1
-            if finished % 1000 == 0:
-                logging.info(f"Transformed {finished} files")
 
 
 extract()
