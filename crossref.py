@@ -74,10 +74,7 @@ def transform_file(input_file_path: str, output_file_path: str):
 
         transformed_item = transform_item(item)
 
-        filtered_item = filter_item(transformed_item)
-
-        if filtered_item:
-            output_data.append(filtered_item)
+        output_data.append(transformed_item)
 
     with jsonlines.open(output_file_path, mode='w', compact=True) as output_file:
         output_file.write_all(output_data)
@@ -183,33 +180,6 @@ def transform_item(item):
         return [transform_item(i) for i in item]
     else:
         return item
-
-
-def filter_item(item):
-
-    if 'type' not in item.keys():
-        return None
-
-    if 'issued' not in item.keys():
-        return None
-
-    filter_status = True
-
-    for k, v in item.items():
-        if k == 'type' and v != 'journal-article':
-            filter_status = False
-        if k == 'issued':
-            filter_date = datetime(2013, 1, 1)
-            if v is None:
-                filter_status = False
-            if v is not None:
-                if not datetime.strptime(v, '%Y-%m-%d') >= filter_date:
-                    filter_status = False
-
-    if filter_status:
-        return item
-    else:
-        return None
 
 
 def transform_release(max_workers: int = cpu_count()):

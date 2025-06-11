@@ -52,6 +52,7 @@ Load into BigQuery:
 $ bq load
   --ignore_unknown_values
   --source_format=NEWLINE_DELIMITED_JSON
+  --clustering_fields=type
   subugoe-collaborative:cr_instant.snapshot
   gs://bigschol/transform/*.gz schema_crossref.json
 ```
@@ -60,24 +61,24 @@ $ bq load
 
 ```sql
 SELECT member, publisher, COUNT(DISTINCT(doi)) as n
-FROM `api-project-764811344545.cr_instant.snapshot`
+FROM `subugoe-collaborative.cr_instant.snapshot` 
 GROUP BY member, publisher
 ORDER BY n DESC
 LIMIT 10
 ```
 
-|member | publisher | n      |
-|-------|-----------|--------|
-|78  |Elsevier BV |17540147 |
-|311 |Wiley |8900657 |
-|297 |Springer Science and Business Media LLC |8435224 |
-|301 |Informa UK Limited| 4467000 |
-|263 |IEEE |3453758 |
-|340 |Public Library of Science (PLoS)| 3276309 |
-|286 |Oxford University Press (OUP) |3069256 |
-|179 |SAGE Publications |2539602|
-|276 |Ovid Technologies (Wolters Kluwer Health)| 2276974 |
-|316 |American Chemical Society (ACS)| 2096678 |
+| member | publisher                                 | n        |
+|--------|-------------------------------------------|----------|
+| 78     | Elsevier BV                               | 22023208 |
+| 311    | Wiley                                     | 11428895 |
+| 297    | Springer Science and Business Media LLC   | 10721803 |
+| 286    | Oxford University Press (OUP)             | 5383878  |
+| 301    | Informa UK Limited                        | 5144680  |
+| 340    | Public Library of Science (PLoS)          | 4530155  |
+| 263    | IEEE                                      | 4510396  |
+| 179    | SAGE Publications                         | 3061413  |
+| 276    | Ovid Technologies (Wolters Kluwer Health) | 2838793  |
+| 316    | American Chemical Society (ACS)           | 2720944  |
 
 ## To Do
 - Tests

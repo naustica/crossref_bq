@@ -4,7 +4,7 @@
 #SBATCH -N 1
 #SBATCH -n 1
 #SBATCH -c 16
-#SBATCH -t 09:00:00
+#SBATCH -t 12:00:00
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=nick.haupka@sub.uni-goettingen.de
 
