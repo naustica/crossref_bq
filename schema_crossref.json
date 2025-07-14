@@ -31,7 +31,7 @@
   {
       "mode": "NULLABLE",
       "name": "accepted",
-      "type": "DATE",
+      "type": "DATETIME",
       "description": "Date on which a work was accepted, after being submitted, during a submission process."
   },
   {
@@ -44,7 +44,7 @@
     "description": "",
     "mode": "NULLABLE",
     "name": "approved",
-    "type": "DATE"
+    "type": "DATETIME"
   },
   {
     "mode": "NULLABLE",
@@ -338,7 +338,7 @@
   {
       "mode": "NULLABLE",
       "name": "content_created",
-      "type": "DATE",
+      "type": "DATETIME",
       "description": "Full titles of the containing work (usually a book or journal)"
   },
   {
@@ -363,12 +363,12 @@
       "description": "",
       "mode": "NULLABLE",
       "name": "content_updated",
-      "type": "DATE"
+      "type": "DATETIME"
     },
   {
      "mode": "NULLABLE",
      "name": "created",
-     "type": "DATE",
+     "type": "DATETIME",
      "description": "Date on which the DOI was first registered."
   },
   {
@@ -386,7 +386,7 @@
   {
      "mode": "NULLABLE",
      "name": "deposited",
-     "type": "DATE",
+     "type": "DATETIME",
      "description": "Date on which the work metadata was most recently updated."
   },
   {
@@ -499,7 +499,7 @@
       {
         "mode": "NULLABLE",
         "name": "end",
-        "type": "DATE"
+        "type": "DATETIME"
       },
       {
         "mode": "NULLABLE",
@@ -524,7 +524,7 @@
       {
         "mode": "NULLABLE",
         "name": "start",
-        "type": "DATE"
+        "type": "DATETIME"
       },
       {
         "mode": "NULLABLE",
@@ -576,7 +576,7 @@
   {
       "mode": "NULLABLE",
       "name": "indexed",
-      "type": "DATE",
+      "type": "DATETIME",
       "description": "Date on which the work metadata was most recently indexed. Re-indexing does not imply a metadata change, see deposited for the most recent metadata change date."
   },
   {
@@ -687,12 +687,12 @@
           {
              "mode": "NULLABLE",
              "name": "role_start",
-             "type": "DATE"
+             "type": "DATETIME"
            },
            {
              "mode": "NULLABLE",
              "name": "role_end",
-             "type": "DATE"
+             "type": "DATETIME"
             }
         ]
       },
@@ -768,12 +768,12 @@
           {
               "mode": "NULLABLE",
               "name": "role_start",
-              "type": "DATE"
+              "type": "DATETIME"
           },
           {
               "mode": "NULLABLE",
               "name": "role_end",
-              "type": "DATE"
+              "type": "DATETIME"
           }
         ]
       },
@@ -797,17 +797,17 @@
       {
           "mode": "NULLABLE",
           "name": "award_start",
-          "type": "DATE"
+          "type": "DATETIME"
       },
       {
           "mode": "NULLABLE",
           "name": "award_planned_end",
-          "type": "DATE"
+          "type": "DATETIME"
       },
       {
           "mode": "NULLABLE",
           "name": "award_end",
-          "type": "DATE"
+          "type": "DATETIME"
       },
       {
         "mode": "REPEATED",
@@ -881,12 +881,12 @@
           {
              "mode": "NULLABLE",
              "name": "role_start",
-             "type": "DATE"
+             "type": "DATETIME"
            },
            {
              "mode": "NULLABLE",
              "name": "role_end",
-             "type": "DATE"
+             "type": "DATETIME"
             }
         ]
       },
@@ -1071,7 +1071,7 @@
   {
       "mode": "NULLABLE",
       "name": "issued",
-      "type": "DATE",
+      "type": "DATETIME",
       "description": "Earliest of published-print and published-online"
   },
   {
@@ -1084,13 +1084,13 @@
       {
         "mode": "NULLABLE",
         "name": "published_print",
-        "type": "DATE",
+        "type": "DATETIME",
         "description": "Date on which the work was published in print."
       },
       {
         "mode": "NULLABLE",
         "name": "published_online",
-        "type": "DATE",
+        "type": "DATETIME",
         "description": "Date on which the work was published online."
       }
     ],
@@ -1126,7 +1126,7 @@
       {
         "mode": "NULLABLE",
         "name": "start",
-        "type": "DATE",
+        "type": "DATETIME",
         "description": "Date on which this license begins to take effect"
        }
     ],
@@ -1192,7 +1192,7 @@
   {
       "mode": "NULLABLE",
       "name": "posted",
-      "type": "DATE",
+      "type": "DATETIME",
       "description": "Date on which posted content was made available online."
   },
   {
@@ -1205,18 +1205,18 @@
     "description": "Date on which content was published.",
     "mode": "NULLABLE",
     "name": "published",
-    "type": "DATE"
+    "type": "DATETIME"
   },
   {
       "mode": "NULLABLE",
       "name": "published_online",
-      "type": "DATE",
+      "type": "DATETIME",
       "description": "Date on which the work was published online."
   },
   {
       "mode": "NULLABLE",
       "name": "published_print",
-      "type": "DATE",
+      "type": "DATETIME",
       "description": "Date on which the work was published in print."
   },
   {
@@ -2667,7 +2667,7 @@
       {
         "mode": "NULLABLE",
         "name": "updated",
-        "type": "DATE",
+        "type": "DATETIME",
         "description": "Date on which the update was published."
       }
     ],
@@ -2685,7 +2685,7 @@
     "description": "",
     "mode": "NULLABLE",
     "name": "award_start",
-    "type": "DATE"
+    "type": "DATETIME"
   },
   {
     "mode": "NULLABLE",
