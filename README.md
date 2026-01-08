@@ -8,7 +8,6 @@ The following packages are required for this workflow.
 
 - [Python3](https://www.python.org)
   - [gsutil](https://pypi.org/project/gsutil/)
-  - [json-lines](https://pypi.org/project/json-lines/)
 
 ## Setting Crossref Variables
 

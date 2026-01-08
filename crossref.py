@@ -14,13 +14,13 @@
 
 # Author: Aniek Roelofs, James Diprose
 
-# Modifications copyright (C) 2023 Nick Haupka
+# Modifications copyright (C) 2026 Nick Haupka
 
 
 import logging
 import os
 import json
-import jsonlines
+import gzip
 import subprocess
 from datetime import datetime
 from concurrent.futures import ProcessPoolExecutor, as_completed
@@ -28,9 +28,9 @@ from multiprocessing import cpu_count
 
 
 filename='all.json.tar.gz'
-download_path='/scratch/users/haupka'
-extract_path='/scratch/users/haupka/extract'
-transform_path='/scratch/users/haupka/transform'
+download_path='/projects/scc/UGOE/UZEI/ULSB/scc_ulsb_wag/dir.project'
+extract_path='/projects/scc/UGOE/UZEI/ULSB/scc_ulsb_wag/dir.project/extract'
+transform_path='/projects/scc/UGOE/UZEI/ULSB/scc_ulsb_wag/dir.project/transform'
 
 os.makedirs(download_path, exist_ok=True)
 os.makedirs(extract_path, exist_ok=True)
@@ -69,15 +69,22 @@ def transform_file(input_file_path: str, output_file_path: str):
     with open(input_file_path, mode='r') as input_file:
         input_data = json.load(input_file)
 
-    output_data = []
-    for item in input_data['items']:
+        output_data = []
+        for item in input_data['items']:
 
-        transformed_item = transform_item(item)
+            transformed_item = transform_item(item)
 
-        output_data.append(transformed_item)
+            output_data.append(transformed_item)
 
-    with jsonlines.open(output_file_path, mode='w', compact=True) as output_file:
-        output_file.write_all(output_data)
+        write_file(output_data, output_file_path)
+
+
+def write_file(data, output_file_path: str) -> None:
+
+    with gzip.open(output_file_path, mode='w') as output_file:
+        result = [json.dumps(record, ensure_ascii=False).encode('utf-8') for record in data]
+        for line in result:
+            output_file.write(line + bytes('\n', encoding='utf8'))
 
 
 def transform_item(item):
@@ -182,7 +189,7 @@ def transform_item(item):
         return item
 
 
-def transform_release(max_workers: int = cpu_count()):
+def transform_release(max_workers: int = cpu_count()) -> None:
 
     with ProcessPoolExecutor(max_workers=max_workers) as executor:
         futures = []
