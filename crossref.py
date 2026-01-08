@@ -195,7 +195,7 @@ def transform_release(max_workers: int = cpu_count()) -> None:
         futures = []
 
         for input_file in os.listdir(extract_path):
-            output_file_path = os.path.join(transform_path, os.path.basename(input_file) + 'l')
+            output_file_path = os.path.join(transform_path, os.path.basename(input_file) + 'l.gz')
             future = executor.submit(transform_file,
                                      input_file_path=extract_path + '/' + input_file,
                                      output_file_path=output_file_path)
