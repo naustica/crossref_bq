@@ -561,6 +561,44 @@
         "name": "name",
         "type": "STRING",
         "description": "Funding body primary name"
+      },
+      {
+      "fields": [
+        {
+          "mode": "REPEATED",
+          "name": "award_number",
+          "type": "STRING",
+          "description": ""
+        }
+      ],
+      "mode": "REPEATED",
+      "name": "award_info",
+      "type": "RECORD"
+      },
+      {
+      "fields": [
+        {
+          "mode": "NULLABLE",
+          "name": "id",
+          "type": "STRING",
+          "description": ""
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "id_type",
+          "type": "STRING",
+          "description": ""
+        },
+        {
+          "mode": "NULLABLE",
+          "name": "asserted_by",
+          "type": "STRING",
+          "description": ""
+        }
+      ],
+      "mode": "REPEATED",
+      "name": "id",
+      "type": "RECORD"
       }
     ],
     "mode": "REPEATED",
@@ -1384,11 +1422,6 @@
         "mode": "REPEATED",
         "name": "based_on_data",
         "type": "RECORD"
-      },
-      {
-        "mode": "REPEATED",
-        "name": "cites",
-        "type": "STRING"
       },
       {
         "fields": [
