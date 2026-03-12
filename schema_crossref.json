@@ -330,7 +330,7 @@
     "type": "RECORD"
   },
   {
-      "mode": "NULLABLE",
+      "mode": "REPEATED",
       "name": "container_title",
       "type": "STRING",
       "description": "Full titles of the containing work (usually a book or journal)"

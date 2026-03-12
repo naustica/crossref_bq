@@ -109,10 +109,6 @@ def transform_item(item):
                 if isinstance(v, list) and len(v) >= 1:
                     v = v[0]
 
-            if k == 'container-title':
-                if isinstance(v, list) and len(v) >= 1:
-                    v = v[0]
-
             if k == 'ISSN':
                 k = 'issn'
                 v = ','.join(list(set(v)))
