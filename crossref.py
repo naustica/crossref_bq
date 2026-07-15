@@ -111,7 +111,6 @@ def transform_item(item):
 
             if k == 'ISSN':
                 k = 'issn'
-                v = ','.join(list(set(v)))
 
             if k == 'archive':
                 v = ','.join(list(set(v)))

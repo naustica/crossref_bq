@@ -11,7 +11,7 @@
     "type": "STRING"
   },
   {
-    "mode": "NULLABLE",
+    "mode": "REPEATED",
     "name": "issn",
     "type": "STRING",
     "description": ""
