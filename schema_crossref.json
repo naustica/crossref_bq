@@ -47,7 +47,7 @@
     "type": "DATETIME"
   },
   {
-    "mode": "NULLABLE",
+    "mode": "REPEATED",
     "name": "archive",
     "type": "STRING",
     "description": ""

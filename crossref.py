@@ -112,8 +112,8 @@ def transform_item(item):
             if k == 'ISSN':
                 k = 'issn'
 
-            if k == 'archive':
-                v = ','.join(list(set(v)))
+            #if k == 'archive':
+                #v = ','.join(list(set(v)))
 
             if k in ['approved',
                      'created',
