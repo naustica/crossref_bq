@@ -7,7 +7,7 @@ This repository contains instructions on how to extract and transform Crossref d
 The following packages are required for this workflow.
 
 - [Python3](https://www.python.org)
-  - [gsutil](https://pypi.org/project/gsutil/)
+- [Google Cloud SDK](https://docs.cloud.google.com/sdk/gcloud/reference/storage)
 
 ## Setting Crossref Variables
 
@@ -40,7 +40,7 @@ $ sbatch cr_hpc.sh
 Upload to Google Cloud Storage:
 
 ```bash
-$ gsutil -m cp -r /scratch/users/haupka/transform/ gs://bigschol
+$ gcloud storage cp --recursive /scratch/users/haupka/transform/ gs://bigschol
 ```
 
 ## Creating a BigQuery Table

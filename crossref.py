@@ -112,9 +112,6 @@ def transform_item(item):
             if k == 'ISSN':
                 k = 'issn'
 
-            #if k == 'archive':
-                #v = ','.join(list(set(v)))
-
             if k in ['approved',
                      'created',
                      'content-created',
@@ -136,14 +133,14 @@ def transform_item(item):
                      'end',
                      'start']:
 
-                v = item[k].get('date-parts')
-
-                if not v:
-                    v = [[]]
-
-                v = v[0]
-
                 try:
+
+                    v = (item[k].get('date-parts'))
+
+                    if not v:
+                        v = [[]]
+
+                    v = v[0]
 
                     len_arr_date_parts = len(v)
 
